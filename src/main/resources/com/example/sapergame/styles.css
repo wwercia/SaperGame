@@ -1,0 +1,15 @@
+.main-box {
+
+    -fx-background-color: #474747; /* Dark background color */
+}
+.welcome-text {
+    -fx-text-fill: white;
+    -fx-font-size: 30px;
+}
+.play-button {
+    -fx-background-color: #92D2FE;
+    -fx-text-fill: black;
+    -fx-font-size: 14px;
+    -fx-padding: 10px 20px;
+    -fx-background-radius: 5px;
+}
