@@ -30,6 +30,9 @@ public class Field {
     public int getBombsAoundThisField() {
         return bombsAoundThisField;
     }
+    public void increaseNumberOfBombsAroundThisField(){
+        bombsAoundThisField++;
+    }
 
     public int getX() {
         return x;

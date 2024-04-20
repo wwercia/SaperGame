@@ -7,61 +7,159 @@ import java.util.Random;
 public class GameMap {
 
     private Field[][] mapFields;
-    private int numberOfBombs = 10;
-    private int numberOfEmptyFields;
+    final private int numberOfBombs = 10;
 
-    public Field[][] createNewMap(){
+    public Field[][] createNewMap() {
         mapFields = new Field[8][8];
         initializeMap(mapFields);
         return mapFields;
     }
 
-    private void initializeMap(Field[][] mapFields){
+    private void initializeMap(Field[][] mapFields) {
 
         generateBombsPositions();
         int numberOfBombs = 0;
-        for(int i = 0; i < mapFields.length; i++){
-            for(int j = 0; j < mapFields[i].length; j++){
+        for (int i = 0; i < mapFields.length; i++) {
+            for (int j = 0; j < mapFields[i].length; j++) {
 
                 boolean isBomb = false;
 
-                for(Bomb bomb : listOfBombs){
-                    if(i == bomb.getX() && j == bomb.getY()){
+                for (Bomb bomb : listOfBombs) {
+                    if (i == bomb.getX() && j == bomb.getY()) {
                         isBomb = true;
                         numberOfBombs++;
                         break;
                     }
                 }
 
-                mapFields[i][j] = new Field(2, isBomb,  i, j);
+                mapFields[i][j] = new Field(0, isBomb, i, j);
             }
         }
         //System.out.println("bombs: "+ numberOfBombs);
         //displayBombsPositions();
         //displayMap();
+
+        for (int i = 0; i < mapFields.length; i++) {
+            for (int j = 0; j < mapFields[i].length; j++) {
+
+                if(mapFields[i][j].isBomb()){
+
+                    boolean isFieldOnLeft = true;
+                    boolean isFieldOnTop = true;
+                    boolean isFieldOnRight = true;
+                    boolean isFieldBelow = true;
+
+
+                    if(i == 0){
+                        isFieldOnLeft = false;
+                    }
+                    if(i == 7){
+                        isFieldOnRight = false;
+                        // nie ma pola po prawej, prawym rogu, prawej górze
+                    }
+                    if(j == 0){
+                        isFieldOnTop = false;
+                        // nie ma pola na górze, górnym lewym rogu, górnym prawym rogu
+                    }
+                    if(j == 7){
+                        isFieldBelow = false;
+                        // nie ma pola na dole, dolnym lewym rogu, dolnym prawym rogu
+                    }
+
+
+                    Field fieldLeftSideOfBomb = null;
+                    if(isFieldOnLeft){
+                        fieldLeftSideOfBomb = mapFields[i-1][j];
+                    }
+                    Field fieldAboveBomb = null;
+                    if(isFieldOnTop){
+                        fieldAboveBomb = mapFields[i][j-1];
+                    }
+                    Field fieldRightSideOfBomb = null;
+                    if(isFieldOnRight){
+                        fieldRightSideOfBomb = mapFields[i+1][j];
+                    }
+                    Field fieldBelowBomb = null;
+                    if(isFieldBelow){
+                        fieldBelowBomb = mapFields[i][j+1];
+                    }
+
+                    Field fieldTopLeftBomb = null;
+                    if(isFieldOnLeft && isFieldOnTop){
+                        fieldTopLeftBomb = mapFields[i-1][j-1];
+                    }
+                    Field fieldTopRightBomb = null;
+                    if(isFieldOnRight && isFieldOnTop){
+                        fieldTopRightBomb = mapFields[i+1][j-1];
+                    }
+                    Field fieldDownLeftBomb = null;
+                    if(isFieldOnLeft && isFieldBelow){
+                        fieldDownLeftBomb = mapFields[i-1][j+1];
+                    }
+                    Field fieldDownRightBomb = null;
+                    if(isFieldOnRight && isFieldBelow){
+                        fieldDownRightBomb = mapFields[i+1][j+1];
+                    }
+
+
+                    if(fieldLeftSideOfBomb != null){
+                        fieldLeftSideOfBomb.increaseNumberOfBombsAroundThisField();
+                    }
+                    if(fieldTopLeftBomb != null){
+                        fieldTopLeftBomb.increaseNumberOfBombsAroundThisField();
+                    }
+                    if(fieldAboveBomb != null){
+                        fieldAboveBomb.increaseNumberOfBombsAroundThisField();
+                    }
+                    if(fieldTopRightBomb != null){
+                        fieldTopRightBomb.increaseNumberOfBombsAroundThisField();
+                    }
+                    if(fieldRightSideOfBomb != null){
+                        fieldRightSideOfBomb.increaseNumberOfBombsAroundThisField();
+                    }
+                    if(fieldDownRightBomb != null){
+                        fieldDownRightBomb.increaseNumberOfBombsAroundThisField();
+                    }
+                    if(fieldBelowBomb != null){
+                        fieldBelowBomb.increaseNumberOfBombsAroundThisField();
+                    }
+                    if(fieldDownLeftBomb != null){
+                        fieldDownLeftBomb.increaseNumberOfBombsAroundThisField();
+                    }
+
+
+                }
+
+            }
+        }
+        displayMap();
+
+
     }
+
     ArrayList<Bomb> listOfBombs = new ArrayList<>();
-    private void generateBombsPositions(){
+
+    private void generateBombsPositions() {
         Random random = new Random();
-        for(int t = 0; t < numberOfBombs; t++){
+        for (int t = 0; t < numberOfBombs; t++) {
             System.out.println(t);
             int x;
             int y;
-            while (true){
+            while (true) {
                 x = random.nextInt(8);
                 y = random.nextInt(8);
                 boolean isPositionOccupied = false;
-                if(!listOfBombs.isEmpty()){
-                    for (Bomb bomb : listOfBombs){
-                        if(bomb.getX() == x && bomb.getY() == y){
+                if (!listOfBombs.isEmpty()) {
+                    for (Bomb bomb : listOfBombs) {
+                        if (bomb.getX() == x && bomb.getY() == y) {
                             isPositionOccupied = true;
                             break;
                         }
                     }
-                    if(!isPositionOccupied){
+                    if (!isPositionOccupied) {
                         break;
                     }
-                }else {
+                } else {
                     break;
                 }
             }
@@ -71,16 +169,17 @@ public class GameMap {
         System.out.println("number of bombs " + listOfBombs.size());
     }
 
-    private void displayMap(){
 
-        for(int i = 0; i < mapFields.length; i++) {
+    private void displayMap() {
+
+        for (int i = 0; i < mapFields.length; i++) {
             for (int j = 0; j < mapFields[i].length; j++) {
 
                 Field field = mapFields[i][j];
-                if(field.isBomb()){
-                    System.out.print("0");
-                }else {
-                    System.out.print("1");
+                if (field.isBomb()) {
+                    System.out.print("*");
+                } else {
+                    System.out.print(mapFields[i][j].getBombsAoundThisField());
                 }
 
             }
@@ -89,8 +188,8 @@ public class GameMap {
 
     }
 
-    private void displayBombsPositions(){
-        for(Bomb bomb : listOfBombs){
+    private void displayBombsPositions() {
+        for (Bomb bomb : listOfBombs) {
             System.out.println("position: " + bomb.getX() + " " + bomb.getY());
         }
     }
