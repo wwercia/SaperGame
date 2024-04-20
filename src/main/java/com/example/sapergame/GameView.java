@@ -33,4 +33,10 @@ public class GameView {
         stage.show();
     }
 
+    private void initGAmeMap(){
+
+
+
+    }
+
 }

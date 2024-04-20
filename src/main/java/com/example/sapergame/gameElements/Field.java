@@ -2,14 +2,33 @@ package com.example.sapergame.gameElements;
 
 public class Field {
 
-    private int bombs;
+    private int bombsAoundThisField;
     private int x;
     private int y;
-    private boolean isMarkedWithBomb;
+    private boolean isBomb;
+    private boolean isExposed;
+    public Field(int bombsAoundThisField, boolean isBomb, int x, int y) {
+        if(bombsAoundThisField > 8){
+            throw new TooManyBombsException();
+        } else if (bombsAoundThisField < 0) {
+            throw new NotEnoughBombsException();
+        }
+        this.bombsAoundThisField = bombsAoundThisField;
+        this.x = x;
+        this.y = y;
+        this.isBomb = isBomb;
+        this.isExposed = false;
+    }
 
+    public boolean isExposed() {
+        return isExposed;
+    }
 
-    public int getBombs() {
-        return bombs;
+    public void setExposed(boolean exposed) {
+        isExposed = exposed;
+    }
+    public int getBombsAoundThisField() {
+        return bombsAoundThisField;
     }
 
     public int getX() {
@@ -20,12 +39,12 @@ public class Field {
         return y;
     }
 
-    public boolean isMarkedWithBomb() {
-        return isMarkedWithBomb;
+    public boolean isBomb() {
+        return isBomb;
     }
 
-    public void setMarkedWithBomb(boolean markedWithBomb) {
-        isMarkedWithBomb = markedWithBomb;
+    public void setBomb(boolean bomb) {
+        isBomb = bomb;
     }
 
 }
