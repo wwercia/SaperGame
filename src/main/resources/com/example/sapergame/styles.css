@@ -13,3 +13,15 @@
     -fx-padding: 10px 20px;
     -fx-background-radius: 5px;
 }
+.game-button{
+    -fx-background-color: #616162;
+    -fx-text-fill: white;
+    -fx-font-size: 15px;
+    -fx-padding: 20px 30px;
+}
+.bomb-button{
+    -fx-background-color: #0a0b0c;
+    -fx-text-fill: white;
+    -fx-font-size: 15px;
+    -fx-padding: 20px 30px;
+}

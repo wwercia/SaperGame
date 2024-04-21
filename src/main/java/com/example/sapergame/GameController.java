@@ -10,10 +10,9 @@ public class GameController {
 
     public void startGame(){
         GameView gameView = new GameView(new GameController());
-        gameView.initGameView();
-
         GameMap gameMap = new GameMap();
-        Field[][] fields = gameMap.createNewMap(3,2);
+        Field[][] mapFields = gameMap.createNewMap(3,2);
+        gameView.initGameView(mapFields);
     }
 
 }
