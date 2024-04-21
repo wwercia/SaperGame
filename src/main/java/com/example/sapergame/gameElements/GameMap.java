@@ -8,9 +8,11 @@ public class GameMap {
 
     private Field[][] mapFields;
     final private int numberOfBombs = 10;
+    private Field fieldClickedByUser;
 
-    public Field[][] createNewMap() {
+    public Field[][] createNewMap(int xClickedByUser, int yClickedByUser) {
         mapFields = new Field[8][8];
+        fieldClickedByUser = new Field(0, false, xClickedByUser, yClickedByUser);
         initializeMap(mapFields);
         return mapFields;
     }
@@ -42,7 +44,7 @@ public class GameMap {
         for (int i = 0; i < mapFields.length; i++) {
             for (int j = 0; j < mapFields[i].length; j++) {
 
-                if(mapFields[i][j].isBomb()){
+                if (mapFields[i][j].isBomb()) {
 
                     boolean isFieldOnLeft = true;
                     boolean isFieldOnTop = true;
@@ -50,80 +52,80 @@ public class GameMap {
                     boolean isFieldBelow = true;
 
 
-                    if(i == 0){
+                    if (i == 0) {
                         isFieldOnLeft = false;
                     }
-                    if(i == 7){
+                    if (i == 7) {
                         isFieldOnRight = false;
                         // nie ma pola po prawej, prawym rogu, prawej górze
                     }
-                    if(j == 0){
+                    if (j == 0) {
                         isFieldOnTop = false;
                         // nie ma pola na górze, górnym lewym rogu, górnym prawym rogu
                     }
-                    if(j == 7){
+                    if (j == 7) {
                         isFieldBelow = false;
                         // nie ma pola na dole, dolnym lewym rogu, dolnym prawym rogu
                     }
 
 
                     Field fieldLeftSideOfBomb = null;
-                    if(isFieldOnLeft){
-                        fieldLeftSideOfBomb = mapFields[i-1][j];
+                    if (isFieldOnLeft) {
+                        fieldLeftSideOfBomb = mapFields[i - 1][j];
                     }
                     Field fieldAboveBomb = null;
-                    if(isFieldOnTop){
-                        fieldAboveBomb = mapFields[i][j-1];
+                    if (isFieldOnTop) {
+                        fieldAboveBomb = mapFields[i][j - 1];
                     }
                     Field fieldRightSideOfBomb = null;
-                    if(isFieldOnRight){
-                        fieldRightSideOfBomb = mapFields[i+1][j];
+                    if (isFieldOnRight) {
+                        fieldRightSideOfBomb = mapFields[i + 1][j];
                     }
                     Field fieldBelowBomb = null;
-                    if(isFieldBelow){
-                        fieldBelowBomb = mapFields[i][j+1];
+                    if (isFieldBelow) {
+                        fieldBelowBomb = mapFields[i][j + 1];
                     }
 
                     Field fieldTopLeftBomb = null;
-                    if(isFieldOnLeft && isFieldOnTop){
-                        fieldTopLeftBomb = mapFields[i-1][j-1];
+                    if (isFieldOnLeft && isFieldOnTop) {
+                        fieldTopLeftBomb = mapFields[i - 1][j - 1];
                     }
                     Field fieldTopRightBomb = null;
-                    if(isFieldOnRight && isFieldOnTop){
-                        fieldTopRightBomb = mapFields[i+1][j-1];
+                    if (isFieldOnRight && isFieldOnTop) {
+                        fieldTopRightBomb = mapFields[i + 1][j - 1];
                     }
                     Field fieldDownLeftBomb = null;
-                    if(isFieldOnLeft && isFieldBelow){
-                        fieldDownLeftBomb = mapFields[i-1][j+1];
+                    if (isFieldOnLeft && isFieldBelow) {
+                        fieldDownLeftBomb = mapFields[i - 1][j + 1];
                     }
                     Field fieldDownRightBomb = null;
-                    if(isFieldOnRight && isFieldBelow){
-                        fieldDownRightBomb = mapFields[i+1][j+1];
+                    if (isFieldOnRight && isFieldBelow) {
+                        fieldDownRightBomb = mapFields[i + 1][j + 1];
                     }
 
 
-                    if(fieldLeftSideOfBomb != null){
+                    if (fieldLeftSideOfBomb != null) {
                         fieldLeftSideOfBomb.increaseNumberOfBombsAroundThisField();
                     }
-                    if(fieldTopLeftBomb != null){
+                    if (fieldTopLeftBomb != null) {
                         fieldTopLeftBomb.increaseNumberOfBombsAroundThisField();
                     }
-                    if(fieldAboveBomb != null){
+                    if (fieldAboveBomb != null) {
                         fieldAboveBomb.increaseNumberOfBombsAroundThisField();
                     }
-                    if(fieldTopRightBomb != null){
+                    if (fieldTopRightBomb != null) {
                         fieldTopRightBomb.increaseNumberOfBombsAroundThisField();
                     }
-                    if(fieldRightSideOfBomb != null){
+                    if (fieldRightSideOfBomb != null) {
                         fieldRightSideOfBomb.increaseNumberOfBombsAroundThisField();
                     }
-                    if(fieldDownRightBomb != null){
+                    if (fieldDownRightBomb != null) {
                         fieldDownRightBomb.increaseNumberOfBombsAroundThisField();
                     }
-                    if(fieldBelowBomb != null){
+                    if (fieldBelowBomb != null) {
                         fieldBelowBomb.increaseNumberOfBombsAroundThisField();
                     }
-                    if(fieldDownLeftBomb != null){
+                    if (fieldDownLeftBomb != null) {
                         fieldDownLeftBomb.increaseNumberOfBombsAroundThisField();
                     }
 
@@ -149,19 +151,38 @@ public class GameMap {
                 x = random.nextInt(8);
                 y = random.nextInt(8);
                 boolean isPositionOccupied = false;
-                if (!listOfBombs.isEmpty()) {
-                    for (Bomb bomb : listOfBombs) {
-                        if (bomb.getX() == x && bomb.getY() == y) {
-                            isPositionOccupied = true;
+
+                int xCheck = x + 1;
+                int yCheck = y + 1;
+
+                boolean isOnField = xCheck == fieldClickedByUser.getX() && yCheck == fieldClickedByUser.getY();
+                boolean isOnLeft = xCheck == fieldClickedByUser.getX() - 1 && yCheck == fieldClickedByUser.getY();
+                boolean isOnTopLeft = xCheck == (fieldClickedByUser.getX() - 1) && yCheck == (fieldClickedByUser.getY() - 1);
+                boolean isOnTop = xCheck == fieldClickedByUser.getX() && yCheck == fieldClickedByUser.getY() - 1;
+                boolean isOnTopRight = xCheck == fieldClickedByUser.getX() + 1 && yCheck == fieldClickedByUser.getY() - 1;
+                boolean isOnRight = xCheck == fieldClickedByUser.getX() + 1 && yCheck == fieldClickedByUser.getY();
+                boolean isOnDownRight = xCheck == fieldClickedByUser.getX() + 1 && yCheck == fieldClickedByUser.getY() + 1;
+                boolean isOnDown = xCheck == fieldClickedByUser.getX() && yCheck == fieldClickedByUser.getY() + 1;
+                boolean isOnDownLeft = xCheck == fieldClickedByUser.getX() - 1 && yCheck == fieldClickedByUser.getY() + 1;
+
+                if (isOnField || isOnLeft || isOnTopLeft || isOnTop || isOnTopRight
+                        || isOnRight || isOnDownRight || isOnDown || isOnDownLeft) {
+                }else {
+                    if (!listOfBombs.isEmpty()) {
+                        for (Bomb bomb : listOfBombs) {
+                            if (bomb.getX() == x && bomb.getY() == y) {
+                                isPositionOccupied = true;
+                                break;
+                            }
+                        }
+                        if (!isPositionOccupied) {
                             break;
                         }
-                    }
-                    if (!isPositionOccupied) {
+                    } else {
                         break;
                     }
-                } else {
-                    break;
                 }
+
             }
             Bomb bomb = new Bomb(x, y);
             listOfBombs.add(bomb);

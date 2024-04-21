@@ -23,7 +23,7 @@ public class GameView {
 
         mainBox = new HBox();
         mainBox.getStyleClass().add("main-box");
-        Label test = new Label("playig game");
+        Label test = new Label("playing game");
         test.getStyleClass().add("welcome-text");
         mainBox.getChildren().add(test);
 

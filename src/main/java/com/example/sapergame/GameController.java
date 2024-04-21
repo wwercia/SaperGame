@@ -13,7 +13,7 @@ public class GameController {
         gameView.initGameView();
 
         GameMap gameMap = new GameMap();
-        Field[][] fields = gameMap.createNewMap();
+        Field[][] fields = gameMap.createNewMap(3,2);
     }
 
 }
