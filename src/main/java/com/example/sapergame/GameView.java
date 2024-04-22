@@ -28,13 +28,15 @@ public class GameView {
 
         mainBox = new HBox();
         mainBox.getStyleClass().add("main-box");
+        mainBox.setAlignment(Pos.CENTER);
         initGameMap();
 
-        Scene scene = new Scene(mainBox, 400, 200);
+        Scene scene = new Scene(mainBox, 675, 610);
         scene.getStylesheets().add(getClass().getResource("styles.css").toExternalForm());
         stage.setScene(scene);
         stage.show();
     }
+
 
     private void initGameMap() {
         initGameMapButtons();
@@ -46,42 +48,44 @@ public class GameView {
             for (int j = 0; j < gameMapFields[i].length; j++) {
                 Field field = gameMapFields[i][j];
                 GameButton button = new GameButton(String.valueOf(field.getBombsAoundThisField()), field.getX(), field.getY(), field.getBombsAoundThisField(), field.isBomb());
-                if(button.isBomb()){
-                    button.setText(" ");
+                if (button.isBomb()) {
+                    button.setText("  ");
                 }
-                button.setPrefSize("");
+                //button.setPrefSize("");
                 gameMapButtons[i][j] = button;
             }
         }
     }
 
-    private void displayGameMap(){
-        HBox boxForVBoxes = new HBox(15);
-        VBox boxForButtons = new VBox(15);
+    private void displayGameMap() {
+        HBox boxForVBoxes = new HBox(10);
+        VBox boxForButtons = new VBox(10);
         boxForVBoxes.setAlignment(Pos.CENTER);
         boxForButtons.setAlignment(Pos.CENTER);
 
         for (int i = 0; i < gameMapFields.length; i++) {
             for (int j = 0; j < gameMapFields[i].length; j++) {
                 GameButton gameButton = gameMapButtons[i][j];
-                if(gameButton.isBomb()){
+                if (gameButton.isBomb()) {
                     gameButton.getStyleClass().add("bomb-button");
-                }else {
+                } else {
                     gameButton.getStyleClass().add("game-button");
                 }
                 boxForButtons.getChildren().add(gameButton);
             }
             boxForVBoxes.getChildren().add(boxForButtons);
-            boxForButtons = new VBox();
+            boxForButtons = new VBox(10);
+            boxForButtons.setAlignment(Pos.CENTER);
         }
 
         mainBox.getChildren().add(boxForVBoxes);
     }
-    private void addStyle(GameButton gameButton){
+
+    private void addStyle(GameButton gameButton) {
 
         String styleToAdd = "";
 
-        if(gameButton.isBomb()){
+        if (gameButton.isBomb()) {
 
         } else if (gameButton.getNumberOfBombsAround() == 0) {
 
@@ -101,6 +105,62 @@ public class GameView {
 
         }
         gameButton.getStyleClass().add(styleToAdd);
+    }
+
+    Stage stage2;
+    private HBox startBox;
+    private GameButton[][] buttons2;
+
+    public int[] displayEmptyMapToGetXAndYClickedByUser() {
+        stage2 = new Stage();
+        stage2.initModality(Modality.APPLICATION_MODAL);
+        stage2.setTitle("Saper");
+
+        startBox = new HBox();
+        startBox.getStyleClass().add("main-box");
+        startBox.setAlignment(Pos.CENTER);
+        displayEmptyMap();
+
+        int[] position = new int[2];
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                GameButton button = buttons2[i][j];
+                button.setOnAction(event -> {
+                    position[0] = button.getX();
+                    position[1] = button.getY();
+                    stage2.close();
+                });
+            }
+        }
+
+        Scene scene = new Scene(startBox, 675, 610);
+        scene.getStylesheets().add(getClass().getResource("styles.css").toExternalForm());
+        stage2.setScene(scene);
+        stage2.showAndWait();
+
+        return position;
+    }
+
+    private void displayEmptyMap() {
+        buttons2 = new GameButton[8][8];
+        HBox boxForVBoxes = new HBox(10);
+        VBox boxForButtons = new VBox(10);
+        boxForVBoxes.setAlignment(Pos.CENTER);
+        boxForButtons.setAlignment(Pos.CENTER);
+
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                GameButton button = new GameButton(i, j, 0, false);
+                boxForButtons.getChildren().add(button);
+                button.getStyleClass().add("game-button");
+                buttons2[i][j] = button;
+            }
+            boxForVBoxes.getChildren().add(boxForButtons);
+            boxForButtons = new VBox(10);
+            boxForButtons.setAlignment(Pos.CENTER);
+        }
+
+        startBox.getChildren().add(boxForVBoxes);
     }
 
 }
