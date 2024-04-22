@@ -19,7 +19,25 @@
     -fx-font-size: 15px;
     -fx-padding: 20px 30px;
 }
+.exposed-field-game-button{
+    -fx-background-color: #616162;
+    -fx-text-fill: white;
+    -fx-font-size: 15px;
+    -fx-padding: 20px 30px;
+}
+.hidden-field-game-button{
+    -fx-background-color: #14149b;
+    -fx-text-fill: white;
+    -fx-font-size: 15px;
+    -fx-padding: 20px 30px;
+}
 .bomb-button{
+    -fx-background-color: #0a0b0c;
+    -fx-text-fill: white;
+    -fx-font-size: 15px;
+    -fx-padding: 20px 30px;
+}
+.for-test-button{
     -fx-background-color: #0a0b0c;
     -fx-text-fill: white;
     -fx-font-size: 15px;

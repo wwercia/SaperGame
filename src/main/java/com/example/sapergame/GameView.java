@@ -20,7 +20,7 @@ public class GameView {
     private Field[][] gameMapFields;
     private GameButton[][] gameMapButtons = new GameButton[8][8];
 
-    public void initGameView(Field[][] gameMapFields) {
+    public void initGameView(Field[][] gameMapFields, Field fieldClickedByUser) {
         this.gameMapFields = gameMapFields;
         Stage stage = new Stage();
         stage.initModality(Modality.APPLICATION_MODAL);
@@ -29,7 +29,7 @@ public class GameView {
         mainBox = new HBox();
         mainBox.getStyleClass().add("main-box");
         mainBox.setAlignment(Pos.CENTER);
-        initGameMap();
+        initGameMap(fieldClickedByUser);
 
         Scene scene = new Scene(mainBox, 675, 610);
         scene.getStylesheets().add(getClass().getResource("styles.css").toExternalForm());
@@ -38,9 +38,9 @@ public class GameView {
     }
 
 
-    private void initGameMap() {
+    private void initGameMap(Field fieldClickedByUser) {
         initGameMapButtons();
-        displayGameMap();
+        displayGameMap(fieldClickedByUser);
     }
 
     private void initGameMapButtons() {
@@ -51,13 +51,12 @@ public class GameView {
                 if (button.isBomb()) {
                     button.setText("  ");
                 }
-                //button.setPrefSize("");
                 gameMapButtons[i][j] = button;
             }
         }
     }
 
-    private void displayGameMap() {
+    private void displayGameMap(Field fieldClickedByUser) {
         HBox boxForVBoxes = new HBox(10);
         VBox boxForButtons = new VBox(10);
         boxForVBoxes.setAlignment(Pos.CENTER);
@@ -66,13 +65,32 @@ public class GameView {
         for (int i = 0; i < gameMapFields.length; i++) {
             for (int j = 0; j < gameMapFields[i].length; j++) {
                 GameButton gameButton = gameMapButtons[i][j];
-                if (gameButton.isBomb()) {
-                    gameButton.getStyleClass().add("bomb-button");
-                } else {
-                    gameButton.getStyleClass().add("game-button");
-                }
+                gameButton.getStyleClass().add("for-test-button");
+                //odsłaniamy na lewo od kliknietego przez uzytkownika pola
+                //exposeFieldsOnTheLeftOfThisField(fieldClickedByUser);
+
+
+                //addStyle(gameButton, fieldClickedByUser);
+                //fillEmptyStyles();
+                //if (gameButton.isBomb()) {
+                //    gameButton.getStyleClass().add("bomb-button");
+                //} else {
+                //    gameButton.getStyleClass().add("game-button");
+                //}
                 boxForButtons.getChildren().add(gameButton);
             }
+
+            //----------------------------------------------------
+            //odsłaniamy na lewo od kliknietego przez uzytkownika pola
+            exposeFieldsOnTheLeftOfThisField(fieldClickedByUser);
+            exposeFieldsOnTheRightOfThisField(fieldClickedByUser);
+            exposeFieldsOnTheTopOfThisField(fieldClickedByUser);
+            exposeFieldsOnTheDownOfThisField(fieldClickedByUser);
+            exposeFieldsOnTheTopLeftOfThisField(fieldClickedByUser);
+            exposeFieldsOnTheTopRightOfThisField(fieldClickedByUser);
+            exposeFieldsOnTheDownRightOfThisField(fieldClickedByUser);
+            exposeFieldsOnTheDownLeftOfThisField(fieldClickedByUser);
+
             boxForVBoxes.getChildren().add(boxForButtons);
             boxForButtons = new VBox(10);
             boxForButtons.setAlignment(Pos.CENTER);
@@ -81,7 +99,158 @@ public class GameView {
         mainBox.getChildren().add(boxForVBoxes);
     }
 
-    private void addStyle(GameButton gameButton) {
+    //-------------------------
+    private void exposeFieldsOnTheLeftOfThisField(Field field){
+        for(int i = 0; i < gameMapButtons.length; i++){
+            for(int j = 0; j < gameMapButtons[i].length; j++){
+                GameButton button = gameMapButtons[i][j];
+                boolean isOnLeft = button.getX() == field.getX() - 1 && button.getY() == field.getY();
+                if(isOnLeft){
+                    button.getStyleClass().remove("for-test-button");
+                    button.getStyleClass().add("exposed-field-game-button");
+                    if(button.getNumberOfBombsAround() == 0){
+                        Field field1 = gameMapFields[i][j];
+                        exposeFieldsOnTheLeftOfThisField(field1);
+                    }
+                }
+            }
+        }
+    }
+    private void exposeFieldsOnTheRightOfThisField(Field field){
+        for(int i = 0; i < gameMapButtons.length; i++){
+            for(int j = 0; j < gameMapButtons[i].length; j++){
+                GameButton button = gameMapButtons[i][j];
+                boolean isOnRight = button.getX() == field.getX() + 1 && button.getY() == field.getY();
+                if(isOnRight){
+                    button.getStyleClass().remove("for-test-button");
+                    button.getStyleClass().add("exposed-field-game-button");
+                    if(button.getNumberOfBombsAround() == 0){
+                        Field field1 = gameMapFields[i][j];
+                        exposeFieldsOnTheRightOfThisField(field1);
+                    }
+                }
+            }
+        }
+    }
+    private void exposeFieldsOnTheTopOfThisField(Field field){
+        for(int i = 0; i < gameMapButtons.length; i++){
+            for(int j = 0; j < gameMapButtons[i].length; j++){
+                GameButton button = gameMapButtons[i][j];
+                boolean isOnTop = button.getX() == field.getX() && button.getY() == field.getY() - 1;
+                if(isOnTop){
+                    button.getStyleClass().remove("for-test-button");
+                    button.getStyleClass().add("exposed-field-game-button");
+                    if(button.getNumberOfBombsAround() == 0){
+                        Field field1 = gameMapFields[i][j];
+                        exposeFieldsOnTheTopOfThisField(field1);
+                    }
+                }
+            }
+        }
+    }
+    private void exposeFieldsOnTheDownOfThisField(Field field){
+        for(int i = 0; i < gameMapButtons.length; i++){
+            for(int j = 0; j < gameMapButtons[i].length; j++){
+                GameButton button = gameMapButtons[i][j];
+                boolean isOnDown = button.getX() == field.getX() && button.getY() == field.getY() + 1;
+                if(isOnDown){
+                    button.getStyleClass().remove("for-test-button");
+                    button.getStyleClass().add("exposed-field-game-button");
+                    if(button.getNumberOfBombsAround() == 0){
+                        Field field1 = gameMapFields[i][j];
+                        exposeFieldsOnTheDownOfThisField(field1);
+                    }
+                }
+            }
+        }
+    }
+    private void exposeFieldsOnTheTopLeftOfThisField(Field field){
+        for(int i = 0; i < gameMapButtons.length; i++){
+            for(int j = 0; j < gameMapButtons[i].length; j++){
+                GameButton button = gameMapButtons[i][j];
+                boolean isOnDown = button.getX() == field.getX() - 1 && button.getY() == field.getY() - 1;
+                if(isOnDown){
+                    button.getStyleClass().remove("for-test-button");
+                    button.getStyleClass().add("exposed-field-game-button");
+                    if(button.getNumberOfBombsAround() == 0){
+                        Field field1 = gameMapFields[i][j];
+                        exposeFieldsOnTheTopLeftOfThisField(field1);
+                    }
+                }
+            }
+        }
+    }
+    private void exposeFieldsOnTheTopRightOfThisField(Field field){
+        for(int i = 0; i < gameMapButtons.length; i++){
+            for(int j = 0; j < gameMapButtons[i].length; j++){
+                GameButton button = gameMapButtons[i][j];
+                boolean isOnDown = button.getX() == field.getX() + 1 && button.getY() == field.getY() - 1;
+                if(isOnDown){
+                    button.getStyleClass().remove("for-test-button");
+                    button.getStyleClass().add("exposed-field-game-button");
+                    if(button.getNumberOfBombsAround() == 0){
+                        Field field1 = gameMapFields[i][j];
+                        exposeFieldsOnTheTopRightOfThisField(field1);
+                    }
+                }
+            }
+        }
+    }
+    private void exposeFieldsOnTheDownRightOfThisField(Field field){
+        for(int i = 0; i < gameMapButtons.length; i++){
+            for(int j = 0; j < gameMapButtons[i].length; j++){
+                GameButton button = gameMapButtons[i][j];
+                boolean isOnDown = button.getX() == field.getX() + 1 && button.getY() == field.getY() + 1;
+                if(isOnDown){
+                    button.getStyleClass().remove("for-test-button");
+                    button.getStyleClass().add("exposed-field-game-button");
+                    if(button.getNumberOfBombsAround() == 0){
+                        Field field1 = gameMapFields[i][j];
+                        exposeFieldsOnTheDownRightOfThisField(field1);
+                    }
+                }
+            }
+        }
+    }
+    private void exposeFieldsOnTheDownLeftOfThisField(Field field){
+        for(int i = 0; i < gameMapButtons.length; i++){
+            for(int j = 0; j < gameMapButtons[i].length; j++){
+                GameButton button = gameMapButtons[i][j];
+                boolean isOnDown = button.getX() == field.getX() - 1 && button.getY() == field.getY() + 1;
+                if(isOnDown){
+                    button.getStyleClass().remove("for-test-button");
+                    button.getStyleClass().add("exposed-field-game-button");
+                    if(button.getNumberOfBombsAround() == 0){
+                        Field field1 = gameMapFields[i][j];
+                        exposeFieldsOnTheDownLeftOfThisField(field1);
+                    }
+                }
+            }
+        }
+    }
+
+
+
+    private void fillEmptyStyles(){
+        for(int i = 0; i < gameMapButtons.length; i++){
+            for(int j = 0; j < gameMapButtons[i].length; j++) {
+                GameButton gameButton = gameMapButtons[i][j];
+
+                if(!gameButton.getStyleClass().contains("exposed-field-game-button")) {
+                    gameButton.getStyleClass().add("hidden-field-game-button");
+                }
+
+                //if(gameButton.getStyleClass().isEmpty()){
+                //    gameButton.getStyleClass().add("hidden-field-game-button");
+                //} else if (gameButton.getStyleClass().contains("game-button")) {
+                //    gameButton.getStyleClass().remove("game-button");
+                //    gameButton.getStyleClass().add("hidden-field-game-button");
+
+            }
+        }
+    }
+
+    private void addStylee(GameButton gameButton) {
 
         String styleToAdd = "";
 

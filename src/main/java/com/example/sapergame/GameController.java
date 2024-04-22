@@ -16,7 +16,8 @@ public class GameController {
         System.out.println("x " + position[0]);
         System.out.println("y " + position[1]);
         Field[][] mapFields = gameMap.createNewMap(position[0],position[1]);
-        gameView.initGameView(mapFields);
+        Field fieldClickedByUser = new Field(0, false, position[0], position[1]);
+        gameView.initGameView(mapFields, fieldClickedByUser);
     }
 
 }

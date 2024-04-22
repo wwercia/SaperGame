@@ -152,8 +152,8 @@ public class GameMap {
                 y = random.nextInt(8);
                 boolean isPositionOccupied = false;
 
-                int xCheck = x + 1;
-                int yCheck = y + 1;
+                int xCheck = x;
+                int yCheck = y;
 
                 boolean isOnField = xCheck == fieldClickedByUser.getX() && yCheck == fieldClickedByUser.getY();
                 boolean isOnLeft = xCheck == fieldClickedByUser.getX() - 1 && yCheck == fieldClickedByUser.getY();
@@ -167,6 +167,7 @@ public class GameMap {
 
                 if (isOnField || isOnLeft || isOnTopLeft || isOnTop || isOnTopRight
                         || isOnRight || isOnDownRight || isOnDown || isOnDownLeft) {
+
                 }else {
                     if (!listOfBombs.isEmpty()) {
                         for (Bomb bomb : listOfBombs) {
