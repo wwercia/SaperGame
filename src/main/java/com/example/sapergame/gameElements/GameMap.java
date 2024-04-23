@@ -20,7 +20,6 @@ public class GameMap {
     private void initializeMap(Field[][] mapFields) {
 
         generateBombsPositions();
-        int numberOfBombs = 0;
         for (int i = 0; i < mapFields.length; i++) {
             for (int j = 0; j < mapFields[i].length; j++) {
 
@@ -29,7 +28,6 @@ public class GameMap {
                 for (Bomb bomb : listOfBombs) {
                     if (i == bomb.getX() && j == bomb.getY()) {
                         isBomb = true;
-                        numberOfBombs++;
                         break;
                     }
                 }
@@ -144,7 +142,6 @@ public class GameMap {
     private void generateBombsPositions() {
         Random random = new Random();
         for (int t = 0; t < numberOfBombs; t++) {
-            System.out.println(t);
             int x;
             int y;
             while (true) {

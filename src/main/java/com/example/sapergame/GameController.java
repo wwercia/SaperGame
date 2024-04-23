@@ -6,8 +6,6 @@ import com.example.sapergame.gameElements.GameMap;
 
 public class GameController {
 
-    private GameModel model = new GameModel();
-
     public void startGame(){
         GameView gameView = new GameView(new GameController());
         GameMap gameMap = new GameMap();

@@ -14,32 +14,81 @@
     -fx-background-radius: 5px;
 }
 .game-button{
-    -fx-background-color: #616162;
-    -fx-text-fill: white;
-    -fx-font-size: 15px;
-    -fx-padding: 20px 30px;
-}
-.exposed-field-game-button{
-    -fx-background-color: #616162;
+    -fx-background-color: #232328;
     -fx-text-fill: white;
     -fx-font-size: 15px;
     -fx-padding: 20px 30px;
 }
 .hidden-field-game-button{
-    -fx-background-color: #14149b;
-    -fx-text-fill: white;
+    -fx-background-color: #0a0b0c;
+    -fx-text-fill: transparent;
+    -fx-padding: 22px 30px;
+}/*
+.exposed-field-game-button{
+    -fx-background-color: #7c7c83;
+    -fx-text-fill: #4b4242;
     -fx-font-size: 15px;
     -fx-padding: 20px 30px;
+}*/
+.zero-bomb-exposed-field-game-button{
+    -fx-background-color: #b6b6bd;
+    -fx-text-fill: transparent;
+    -fx-padding: 22px 30px;
 }
-.bomb-button{
-    -fx-background-color: #0a0b0c;
-    -fx-text-fill: white;
-    -fx-font-size: 15px;
-    -fx-padding: 20px 30px;
+.one-bomb-exposed-field-game-button{
+    -fx-background-color: #b6b6bd;
+    -fx-text-fill: #4c4cea;
+    -fx-font-size: 25px;
+    -fx-padding: 13px 28px;
+    -fx-max-height: 13px;
+    -fx-max-width: 28px;
+
 }
-.for-test-button{
-    -fx-background-color: #0a0b0c;
-    -fx-text-fill: white;
+.two-bombs-exposed-field-game-button{
+    -fx-background-color: #b6b6bd;
+    -fx-text-fill: #ea3838;
+    -fx-font-size: 25px;
+    -fx-padding: 13px 28px;
+}
+.three-bombs-exposed-field-game-button{
+    -fx-background-color: #b6b6bd;
+    -fx-text-fill: #00932f;
+    -fx-font-size: 25px;
+    -fx-padding: 13px 28px;
+}
+.four-bombs-exposed-field-game-button{
+    -fx-background-color: #b6b6bd;
+    -fx-text-fill: #ffad00;
+    -fx-font-size: 25px;
+    -fx-padding: 13px 28px;
+}
+.five-bombs-exposed-field-game-button{
+    -fx-background-color: #b6b6bd;
+    -fx-text-fill: #ff03f2;
+    -fx-font-size: 25px;
+    -fx-padding: 13px 28px;
+}
+.six-bombs-exposed-field-game-button{
+    -fx-background-color: #b6b6bd;
+    -fx-text-fill: #7300ff;
+    -fx-font-size: 25px;
+    -fx-padding: 13px 28px;
+}
+.seven-bombs-exposed-field-game-button{
+    -fx-background-color: #b6b6bd;
+    -fx-text-fill: #d37900;
+    -fx-font-size: 25px;
+    -fx-padding: 13px 28px;
+}
+.eight-bombs-exposed-field-game-button{
+    -fx-background-color: #b6b6bd;
+    -fx-text-fill: #653800;
+    -fx-font-size: 25px;
+    -fx-padding: 13px 28px;
+}
+.bomb-button {
+    -fx-background-color: #33333d;
+    -fx-text-fill: #000000;
     -fx-font-size: 15px;
     -fx-padding: 20px 30px;
 }

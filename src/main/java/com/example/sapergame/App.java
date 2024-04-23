@@ -2,14 +2,13 @@ package com.example.sapergame;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class App extends Application {
     @Override
     public void start(Stage stage) throws Exception {
-        View view = new View();
+        StartView view = new StartView();
         VBox root = view.initView(stage);
         Scene scene = new Scene(root, 400, 200);
         stage.setTitle("Saper");
