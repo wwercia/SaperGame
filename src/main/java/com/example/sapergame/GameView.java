@@ -14,6 +14,7 @@ import java.util.ArrayList;
 
 public class GameView {
 
+    final private int numberOfBombs = 15;
     private GameController gameController;
 
     public GameView(GameController gameController) {
@@ -25,6 +26,7 @@ public class GameView {
     private GameButton[][] gameMapButtons = new GameButton[8][8];
 
     Stage gameStage;
+
     public void initGameView(Field[][] gameMapFields, Field fieldClickedByUser) {
         this.gameMapFields = gameMapFields;
         gameStage = new Stage();
@@ -301,6 +303,7 @@ public class GameView {
                         exposeTopFieldsFromBelowFields();
                     }
                     addStyle(button);
+                    checkIfPlayerWon();
                 });
             }
         }
@@ -333,6 +336,8 @@ public class GameView {
     }
 
     private void displayLoosingScreen() {
+        blockButtons();
+        displayAllBombs();
         Stage stage = new Stage();
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.setTitle("Saper");
@@ -359,8 +364,73 @@ public class GameView {
         stage.setScene(scene);
         stage.showAndWait();
     }
-    private void displayWiningScreen(){
+    private void displayAllBombs(){
+        for(int i = 0; i < gameMapButtons.length; i++){
+            for(int j = 0; j < gameMapButtons[i].length; j++){
+                GameButton button = gameMapButtons[i][j];
+                if(button.isBomb()){
+                    addStyle(button);
+                }
+            }
+        }
+    }
 
+    private void checkIfPlayerWon() {
+
+        int numberOfHiddenButtons = 0;
+
+        for(int i = 0; i < gameMapButtons.length; i++){
+            for(int j = 0; j < gameMapButtons[i].length; j++){
+                GameButton button = gameMapButtons[i][j];
+                if(button.getStyleClass().contains("hidden-field-game-button")){
+                    numberOfHiddenButtons++;
+                }
+            }
+        }
+        if(numberOfHiddenButtons == numberOfBombs){
+            blockButtons();
+            displayAllBombs();
+            displayWiningScreen();
+        }
+        System.out.println(numberOfHiddenButtons);
+
+    }
+
+    private void displayWiningScreen() {
+        Stage stage = new Stage();
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.setTitle("Saper");
+
+        VBox box = new VBox(10);
+        box.getStyleClass().add("main-box");
+        box.setAlignment(Pos.CENTER);
+
+        Label label = new Label("You Won!");
+        label.getStyleClass().add("welcome-text");
+        Label label2 = new Label("Congratulations!");
+        label2.getStyleClass().add("welcome-text");
+
+        Button playAgainButton = new Button("Play again");
+        playAgainButton.getStyleClass().add("play-button");
+        playAgainButton.setOnAction(event -> {
+            gameStage.close();
+            stage.close();
+            gameController.startGame();
+        });
+
+        box.getChildren().addAll(label, label2, playAgainButton);
+
+        Scene scene = new Scene(box, 350, 200);
+        scene.getStylesheets().add(getClass().getResource("styles.css").toExternalForm());
+        stage.setScene(scene);
+        stage.showAndWait();
+    }
+    private void blockButtons(){
+        for (GameButton[] gameMapButton : gameMapButtons) {
+            for (GameButton button : gameMapButton) {
+                button.setOnAction(event -> {});
+            }
+        }
     }
 
     private Stage stage2;
