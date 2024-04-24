@@ -3,6 +3,8 @@ package com.example.sapergame;
 import com.example.sapergame.gameElements.Field;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
@@ -22,11 +24,12 @@ public class GameView {
     private Field[][] gameMapFields;
     private GameButton[][] gameMapButtons = new GameButton[8][8];
 
+    Stage gameStage;
     public void initGameView(Field[][] gameMapFields, Field fieldClickedByUser) {
         this.gameMapFields = gameMapFields;
-        Stage stage = new Stage();
-        stage.initModality(Modality.APPLICATION_MODAL);
-        stage.setTitle("Saper");
+        gameStage = new Stage();
+        gameStage.initModality(Modality.APPLICATION_MODAL);
+        gameStage.setTitle("Saper");
 
         mainBox = new HBox();
         mainBox.getStyleClass().add("main-box");
@@ -35,8 +38,8 @@ public class GameView {
 
         Scene scene = new Scene(mainBox, 675, 610);
         scene.getStylesheets().add(getClass().getResource("styles.css").toExternalForm());
-        stage.setScene(scene);
-        stage.show();
+        gameStage.setScene(scene);
+        gameStage.show();
     }
 
 
@@ -89,7 +92,6 @@ public class GameView {
     private void exposeFieldsOnTop(Field fieldClickedByUser) {
 
         GameButton button = gameMapButtons[fieldClickedByUser.getX()][fieldClickedByUser.getY()];
-        button.getStyleClass().remove("hidden-field-game-button");
         addStyle(button);
 
         boolean isFieldOnLeft = true;
@@ -137,7 +139,6 @@ public class GameView {
                 exposeFieldsOnTop(fieldLeftSideOfBomb);
             } else {
                 GameButton button1 = gameMapButtons[fieldLeftSideOfBomb.getX()][fieldLeftSideOfBomb.getY()];
-                button1.getStyleClass().remove("hidden-field-game-button");
                 addStyle(button1);
             }
         }
@@ -149,7 +150,6 @@ public class GameView {
                 exposeFieldsOnTop(fieldTopLeftBomb);
             } else {
                 GameButton button1 = gameMapButtons[fieldTopLeftBomb.getX()][fieldTopLeftBomb.getY()];
-                button1.getStyleClass().remove("hidden-field-game-button");
                 addStyle(button1);
             }
         }
@@ -161,7 +161,6 @@ public class GameView {
                 exposeFieldsOnTop(fieldAboveBomb);
             } else {
                 GameButton button1 = gameMapButtons[fieldAboveBomb.getX()][fieldAboveBomb.getY()];
-                button1.getStyleClass().remove("hidden-field-game-button");
                 addStyle(button1);
             }
         }
@@ -173,7 +172,6 @@ public class GameView {
                 exposeFieldsOnTop(fieldTopRightBomb);
             } else {
                 GameButton button1 = gameMapButtons[fieldTopRightBomb.getX()][fieldTopRightBomb.getY()];
-                button1.getStyleClass().remove("hidden-field-game-button");
                 addStyle(button1);
             }
         }
@@ -249,7 +247,6 @@ public class GameView {
 
             } else {
                 GameButton button1 = gameMapButtons[fieldRightSideOfBomb.getX()][fieldRightSideOfBomb.getY()];
-                button1.getStyleClass().remove("hidden-field-game-button");
                 addStyle(button1);
             }
         }
@@ -262,7 +259,6 @@ public class GameView {
                 exposeFieldsBelow(fieldDownRightBomb);
             } else {
                 GameButton button1 = gameMapButtons[fieldDownRightBomb.getX()][fieldDownRightBomb.getY()];
-                button1.getStyleClass().remove("hidden-field-game-button");
                 addStyle(button1);
             }
         }
@@ -274,7 +270,6 @@ public class GameView {
                 exposeFieldsBelow(fieldBelowBomb);
             } else {
                 GameButton button1 = gameMapButtons[fieldBelowBomb.getX()][fieldBelowBomb.getY()];
-                button1.getStyleClass().remove("hidden-field-game-button");
                 addStyle(button1);
             }
         }
@@ -286,7 +281,6 @@ public class GameView {
                 exposeFieldsBelow(fieldDownLeftBomb);
             } else {
                 GameButton button1 = gameMapButtons[fieldDownLeftBomb.getX()][fieldDownLeftBomb.getY()];
-                button1.getStyleClass().remove("hidden-field-game-button");
                 addStyle(button1);
             }
         }
@@ -294,10 +288,20 @@ public class GameView {
 
 
     private void setActionsOnButtons() {
-        for (int i = 0; i < gameMapButtons.length; i++) {
-            for (int j = 0; j < gameMapButtons[i].length; j++) {
-                GameButton button = gameMapButtons[i][j];
-                button.setOnAction(event -> addStyle(button));
+        for (GameButton[] gameMapButton : gameMapButtons) {
+            for (GameButton button : gameMapButton) {
+                button.setOnAction(event -> {
+                    if (button.isBomb()) {
+                        displayLoosingScreen();
+                    } else if (button.getNumberOfBombsAround() == 0 && !button.isBomb()) {
+                        Field field = new Field(button.getNumberOfBombsAround(), button.isBomb(), button.getX(), button.getY());
+                        exposeFieldsOnTop(field);
+                        exposeBelowFieldsFromTopFields();
+                        exposeFieldsBelow(field);
+                        exposeTopFieldsFromBelowFields();
+                    }
+                    addStyle(button);
+                });
             }
         }
     }
@@ -326,6 +330,37 @@ public class GameView {
         } else if (bombsAround == 8) {
             button.getStyleClass().add("eight-bombs-exposed-field-game-button");
         }
+    }
+
+    private void displayLoosingScreen() {
+        Stage stage = new Stage();
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.setTitle("Saper");
+
+        VBox box = new VBox(10);
+        box.getStyleClass().add("main-box");
+        box.setAlignment(Pos.CENTER);
+
+        Label label = new Label("You lost!");
+        label.getStyleClass().add("welcome-text");
+
+        Button playAgainButton = new Button("Play again");
+        playAgainButton.getStyleClass().add("play-button");
+        playAgainButton.setOnAction(event -> {
+            gameStage.close();
+            stage.close();
+            gameController.startGame();
+        });
+
+        box.getChildren().addAll(label, playAgainButton);
+
+        Scene scene = new Scene(box, 200, 200);
+        scene.getStylesheets().add(getClass().getResource("styles.css").toExternalForm());
+        stage.setScene(scene);
+        stage.showAndWait();
+    }
+    private void displayWiningScreen(){
+
     }
 
     private Stage stage2;
@@ -358,7 +393,6 @@ public class GameView {
         scene.getStylesheets().add(getClass().getResource("styles.css").toExternalForm());
         stage2.setScene(scene);
         stage2.showAndWait();
-
         return position;
     }
 

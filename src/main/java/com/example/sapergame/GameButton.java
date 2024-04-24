@@ -3,10 +3,10 @@ package com.example.sapergame;
 import javafx.scene.control.Button;
 
 public class GameButton extends Button {
-    private int x;
-    private int y;
-    private int numberOfBombsAround;
-    private boolean isBomb;
+    private final int x;
+    private final int y;
+    private final int numberOfBombsAround;
+    private final boolean isBomb;
 
     public GameButton(int x, int y, int numberOfBombsAround, boolean isBomb) {
         this.x = x;
@@ -26,31 +26,16 @@ public class GameButton extends Button {
         return x;
     }
 
-    public void setX(int x) {
-        this.x = x;
-    }
-
     public int getY() {
         return y;
-    }
-
-    public void setY(int y) {
-        this.y = y;
     }
 
     public int getNumberOfBombsAround() {
         return numberOfBombsAround;
     }
 
-    public void setNumberOfBombsAround(int numberOfBombsAround) {
-        this.numberOfBombsAround = numberOfBombsAround;
-    }
-
     public boolean isBomb() {
         return isBomb;
     }
 
-    public void setBomb(boolean bomb) {
-        isBomb = bomb;
-    }
 }

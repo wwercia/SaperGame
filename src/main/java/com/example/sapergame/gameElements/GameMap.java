@@ -7,7 +7,7 @@ import java.util.Random;
 public class GameMap {
 
     private Field[][] mapFields;
-    final private int numberOfBombs = 10;
+    final private int numberOfBombs = 15;
     private Field fieldClickedByUser;
 
     public Field[][] createNewMap(int xClickedByUser, int yClickedByUser) {

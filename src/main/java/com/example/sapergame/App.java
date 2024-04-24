@@ -7,7 +7,7 @@ import javafx.stage.Stage;
 
 public class App extends Application {
     @Override
-    public void start(Stage stage) throws Exception {
+    public void start(Stage stage){
         StartView view = new StartView();
         VBox root = view.initView(stage);
         Scene scene = new Scene(root, 400, 200);
