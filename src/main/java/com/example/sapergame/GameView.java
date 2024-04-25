@@ -22,13 +22,13 @@ public class GameView {
     }
 
     private HBox mainBox;
-    private Field[][] gameMapFields;
-    private final GameButton[][] gameMapButtons = new GameButton[8][8];
+    private Field[][] gameMapFields = new Field[8][8];
+    private GameButton[][] gameMapButtons = new GameButton[8][8];
+    private Field fieldClickedByPlayer;
 
     Stage gameStage;
 
-    public void initGameView(Field[][] gameMapFields, Field fieldClickedByUser) {
-        this.gameMapFields = gameMapFields;
+    public void initGameView() {
         gameStage = new Stage();
         gameStage.initModality(Modality.APPLICATION_MODAL);
         gameStage.setTitle("Saper");
@@ -36,18 +36,61 @@ public class GameView {
         mainBox = new HBox();
         mainBox.getStyleClass().add("main-box");
         mainBox.setAlignment(Pos.CENTER);
-        initGameMap(fieldClickedByUser);
+
+        initGameMapToGetFieldClickedByUser();
 
         Scene scene = new Scene(mainBox, 675, 610);
         scene.getStylesheets().add(getClass().getResource("styles.css").toExternalForm());
         gameStage.setScene(scene);
         gameStage.show();
+
     }
 
+    private void initGameMapToGetFieldClickedByUser(){
+        displayEmptyButtons();
+        Integer[] position = new Integer[2];
+        for (int i = 0; i < gameMapButtons.length; i++) {
+            for (int j = 0; j < gameMapButtons[i].length; j++) {
+                GameButton button = gameMapButtons[i][j];
+                int finalI = i;
+                int finalJ = j;
+                button.setOnAction(event -> {
+                    position[0] = button.getX();
+                    position[1] = button.getY();
+                    Field fieldClicked = new Field(0, false, finalI, finalJ);
+                    Field[][] fields = gameController.initGameMap(fieldClicked);
+                    fieldClickedByPlayer = fieldClicked;
+                    this.gameMapFields = fields;
+                    initGameMap(fieldClickedByPlayer);
+                });
+            }
+        }
+    }
+    private void displayEmptyButtons(){
+        gameMapButtons = new GameButton[8][8];
+        HBox boxForVBoxes = new HBox(10);
+        VBox boxForButtons = new VBox(10);
+        boxForVBoxes.setAlignment(Pos.CENTER);
+        boxForButtons.setAlignment(Pos.CENTER);
+
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                GameButton button = new GameButton(i, j, 0, false);
+                button.setText("  ");
+                boxForButtons.getChildren().add(button);
+                button.getStyleClass().add("hidden-field-game-button");
+                gameMapButtons[i][j] = button;
+            }
+            boxForVBoxes.getChildren().add(boxForButtons);
+            boxForButtons = new VBox(10);
+            boxForButtons.setAlignment(Pos.CENTER);
+        }
+        mainBox.getChildren().add(boxForVBoxes);
+    }
 
     private void initGameMap(Field fieldClickedByUser) {
         initGameMapButtons();
-        displayGameMap(fieldClickedByUser);
+        changeButtonActions(fieldClickedByUser);
         setActionsOnButtons();
     }
 
@@ -55,37 +98,31 @@ public class GameView {
         for (int i = 0; i < gameMapFields.length; i++) {
             for (int j = 0; j < gameMapFields[i].length; j++) {
                 Field field = gameMapFields[i][j];
-                GameButton button = new GameButton(String.valueOf(field.getBombsAroundThisField()), field.getX(), field.getY(), field.getBombsAroundThisField(), field.isBomb());
-                if (button.isBomb()) {
-                    button.setText("  ");
+                GameButton button1 = gameMapButtons[i][j];
+                button1.setText(String.valueOf(field.getBombsAroundThisField()));
+                button1.setNumberOfBombsAround(field.getBombsAroundThisField());
+                button1.setX(field.getX());
+                button1.setY(field.getY());
+                button1.setBomb(field.isBomb());
+                if (button1.isBomb()) {
+                    button1.setText("  ");
                 }
-                gameMapButtons[i][j] = button;
+                gameMapButtons[i][j] = button1;
             }
         }
     }
 
-    private void displayGameMap(Field fieldClickedByUser) {
-        HBox boxForVBoxes = new HBox(10);
-        VBox boxForButtons = new VBox(10);
-        boxForVBoxes.setAlignment(Pos.CENTER);
-        boxForButtons.setAlignment(Pos.CENTER);
-
+    private void changeButtonActions(Field fieldClickedByUser) {
         for (int i = 0; i < gameMapFields.length; i++) {
             for (int j = 0; j < gameMapFields[i].length; j++) {
                 GameButton gameButton = gameMapButtons[i][j];
                 gameButton.getStyleClass().add("hidden-field-game-button");
-                boxForButtons.getChildren().add(gameButton);
             }
-            boxForVBoxes.getChildren().add(boxForButtons);
-            boxForButtons = new VBox(10);
-            boxForButtons.setAlignment(Pos.CENTER);
         }
         exposeFieldsOnTop(fieldClickedByUser);
         exposeBelowFieldsFromTopFields();
         exposeFieldsBelow(fieldClickedByUser);
         exposeTopFieldsFromBelowFields();
-
-        mainBox.getChildren().add(boxForVBoxes);
     }
 
     // nie ruszaj tego! odpowiada za wyswietlenie odpowiednich pol na podstawie pierwszego klikniecia gracza
@@ -433,60 +470,4 @@ public class GameView {
             }
         }
     }
-
-    private Stage stage2;
-    private HBox startBox;
-    private GameButton[][] buttons2;
-
-    public int[] displayEmptyMapToGetXAndYClickedByUser() {
-        stage2 = new Stage();
-        stage2.initModality(Modality.APPLICATION_MODAL);
-        stage2.setTitle("Saper");
-
-        startBox = new HBox();
-        startBox.getStyleClass().add("main-box");
-        startBox.setAlignment(Pos.CENTER);
-        displayEmptyMap();
-
-        int[] position = new int[2];
-        for (int i = 0; i < gameMapButtons.length; i++) {
-            for (int j = 0; j < gameMapButtons[i].length; j++) {
-                GameButton button = buttons2[i][j];
-                button.setOnAction(event -> {
-                    position[0] = button.getX();
-                    position[1] = button.getY();
-                    stage2.close();
-                });
-            }
-        }
-
-        Scene scene = new Scene(startBox, 675, 610);
-        scene.getStylesheets().add(getClass().getResource("styles.css").toExternalForm());
-        stage2.setScene(scene);
-        stage2.showAndWait();
-        return position;
-    }
-
-    private void displayEmptyMap() {
-        buttons2 = new GameButton[8][8];
-        HBox boxForVBoxes = new HBox(10);
-        VBox boxForButtons = new VBox(10);
-        boxForVBoxes.setAlignment(Pos.CENTER);
-        boxForButtons.setAlignment(Pos.CENTER);
-
-        for (int i = 0; i < 8; i++) {
-            for (int j = 0; j < 8; j++) {
-                GameButton button = new GameButton(i, j, 0, false);
-                boxForButtons.getChildren().add(button);
-                button.getStyleClass().add("game-button");
-                buttons2[i][j] = button;
-            }
-            boxForVBoxes.getChildren().add(boxForButtons);
-            boxForButtons = new VBox(10);
-            boxForButtons.setAlignment(Pos.CENTER);
-        }
-
-        startBox.getChildren().add(boxForVBoxes);
-    }
-
 }
