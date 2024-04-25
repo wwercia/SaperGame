@@ -35,10 +35,6 @@ public class GameMap {
                 mapFields[i][j] = new Field(0, isBomb, i, j);
             }
         }
-        //System.out.println("bombs: "+ numberOfBombs);
-        //displayBombsPositions();
-        //displayMap();
-
         for (int i = 0; i < mapFields.length; i++) {
             for (int j = 0; j < mapFields[i].length; j++) {
 
@@ -191,14 +187,13 @@ public class GameMap {
 
     private void displayMap() {
 
-        for (int i = 0; i < mapFields.length; i++) {
-            for (int j = 0; j < mapFields[i].length; j++) {
+        for (Field[] mapField : mapFields) {
+            for (Field field : mapField) {
 
-                Field field = mapFields[i][j];
                 if (field.isBomb()) {
                     System.out.print("*");
                 } else {
-                    System.out.print(mapFields[i][j].getBombsAoundThisField());
+                    System.out.print(field.getBombsAroundThisField());
                 }
 
             }

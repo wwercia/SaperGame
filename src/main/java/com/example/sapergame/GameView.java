@@ -15,7 +15,7 @@ import java.util.ArrayList;
 public class GameView {
 
     final private int numberOfBombs = 15;
-    private GameController gameController;
+    private final GameController gameController;
 
     public GameView(GameController gameController) {
         this.gameController = gameController;
@@ -23,7 +23,7 @@ public class GameView {
 
     private HBox mainBox;
     private Field[][] gameMapFields;
-    private GameButton[][] gameMapButtons = new GameButton[8][8];
+    private final GameButton[][] gameMapButtons = new GameButton[8][8];
 
     Stage gameStage;
 
@@ -55,7 +55,7 @@ public class GameView {
         for (int i = 0; i < gameMapFields.length; i++) {
             for (int j = 0; j < gameMapFields[i].length; j++) {
                 Field field = gameMapFields[i][j];
-                GameButton button = new GameButton(String.valueOf(field.getBombsAoundThisField()), field.getX(), field.getY(), field.getBombsAoundThisField(), field.isBomb());
+                GameButton button = new GameButton(String.valueOf(field.getBombsAroundThisField()), field.getX(), field.getY(), field.getBombsAroundThisField(), field.isBomb());
                 if (button.isBomb()) {
                     button.setText("  ");
                 }
@@ -89,7 +89,7 @@ public class GameView {
     }
 
     // nie ruszaj tego! odpowiada za wyswietlenie odpowiednich pol na podstawie pierwszego klikniecia gracza
-    private ArrayList<Field> listOfFieldsFromTop = new ArrayList<>();
+    private final ArrayList<Field> listOfFieldsFromTop = new ArrayList<>();
 
     private void exposeFieldsOnTop(Field fieldClickedByUser) {
 
@@ -134,7 +134,7 @@ public class GameView {
 
 
         if (fieldLeftSideOfBomb != null) {
-            if (fieldLeftSideOfBomb.getBombsAoundThisField() == 0) {
+            if (fieldLeftSideOfBomb.getBombsAroundThisField() == 0) {
                 if (!listOfFieldsFromBelow.contains(fieldLeftSideOfBomb) && !listOfFieldsFromTop.contains(fieldLeftSideOfBomb)) {
                     listOfFieldsFromTop.add(fieldLeftSideOfBomb);
                 }
@@ -145,7 +145,7 @@ public class GameView {
             }
         }
         if (fieldTopLeftBomb != null) {
-            if (fieldTopLeftBomb.getBombsAoundThisField() == 0) {
+            if (fieldTopLeftBomb.getBombsAroundThisField() == 0) {
                 if (!listOfFieldsFromBelow.contains(fieldTopLeftBomb) && !listOfFieldsFromTop.contains(fieldTopLeftBomb)) {
                     listOfFieldsFromTop.add(fieldTopLeftBomb);
                 }
@@ -156,7 +156,7 @@ public class GameView {
             }
         }
         if (fieldAboveBomb != null) {
-            if (fieldAboveBomb.getBombsAoundThisField() == 0) {
+            if (fieldAboveBomb.getBombsAroundThisField() == 0) {
                 if (!listOfFieldsFromBelow.contains(fieldAboveBomb) && !listOfFieldsFromTop.contains(fieldAboveBomb)) {
                     listOfFieldsFromTop.add(fieldAboveBomb);
                 }
@@ -167,7 +167,7 @@ public class GameView {
             }
         }
         if (fieldTopRightBomb != null) {
-            if (fieldTopRightBomb.getBombsAoundThisField() == 0) {
+            if (fieldTopRightBomb.getBombsAroundThisField() == 0) {
                 if (!listOfFieldsFromBelow.contains(fieldTopRightBomb) && !listOfFieldsFromTop.contains(fieldTopRightBomb)) {
                     listOfFieldsFromTop.add(fieldTopRightBomb);
                 }
@@ -195,7 +195,7 @@ public class GameView {
         }
     }
 
-    private ArrayList<Field> listOfFieldsFromBelow = new ArrayList<>();
+    private final ArrayList<Field> listOfFieldsFromBelow = new ArrayList<>();
 
     private void exposeFieldsBelow(Field field) {
 
@@ -241,7 +241,7 @@ public class GameView {
         }
 
         if (fieldRightSideOfBomb != null) {
-            if (fieldRightSideOfBomb.getBombsAoundThisField() == 0) {
+            if (fieldRightSideOfBomb.getBombsAroundThisField() == 0) {
                 if (!listOfFieldsFromTop.contains(fieldRightSideOfBomb) && !listOfFieldsFromBelow.contains(fieldRightSideOfBomb)) {
                     listOfFieldsFromBelow.add(fieldRightSideOfBomb);
                 }
@@ -254,7 +254,7 @@ public class GameView {
         }
 
         if (fieldDownRightBomb != null) {
-            if (fieldDownRightBomb.getBombsAoundThisField() == 0) {
+            if (fieldDownRightBomb.getBombsAroundThisField() == 0) {
                 if (!listOfFieldsFromTop.contains(fieldDownRightBomb) && !listOfFieldsFromBelow.contains(fieldDownRightBomb)) {
                     listOfFieldsFromBelow.add(fieldDownRightBomb);
                 }
@@ -265,7 +265,7 @@ public class GameView {
             }
         }
         if (fieldBelowBomb != null) {
-            if (fieldBelowBomb.getBombsAoundThisField() == 0) {
+            if (fieldBelowBomb.getBombsAroundThisField() == 0) {
                 if (!listOfFieldsFromTop.contains(fieldBelowBomb) && !listOfFieldsFromBelow.contains(fieldBelowBomb)) {
                     listOfFieldsFromBelow.add(fieldBelowBomb);
                 }
@@ -276,7 +276,7 @@ public class GameView {
             }
         }
         if (fieldDownLeftBomb != null) {
-            if (fieldDownLeftBomb.getBombsAoundThisField() == 0) {
+            if (fieldDownLeftBomb.getBombsAroundThisField() == 0) {
                 if (!listOfFieldsFromTop.contains(fieldDownLeftBomb) && !listOfFieldsFromBelow.contains(fieldDownLeftBomb)) {
                     listOfFieldsFromBelow.add(fieldDownLeftBomb);
                 }
@@ -364,11 +364,11 @@ public class GameView {
         stage.setScene(scene);
         stage.showAndWait();
     }
-    private void displayAllBombs(){
-        for(int i = 0; i < gameMapButtons.length; i++){
-            for(int j = 0; j < gameMapButtons[i].length; j++){
-                GameButton button = gameMapButtons[i][j];
-                if(button.isBomb()){
+
+    private void displayAllBombs() {
+        for (GameButton[] gameMapButton : gameMapButtons) {
+            for (GameButton button : gameMapButton) {
+                if (button.isBomb()) {
                     addStyle(button);
                 }
             }
@@ -379,15 +379,14 @@ public class GameView {
 
         int numberOfHiddenButtons = 0;
 
-        for(int i = 0; i < gameMapButtons.length; i++){
-            for(int j = 0; j < gameMapButtons[i].length; j++){
-                GameButton button = gameMapButtons[i][j];
-                if(button.getStyleClass().contains("hidden-field-game-button")){
+        for (GameButton[] gameMapButton : gameMapButtons) {
+            for (GameButton button : gameMapButton) {
+                if (button.getStyleClass().contains("hidden-field-game-button")) {
                     numberOfHiddenButtons++;
                 }
             }
         }
-        if(numberOfHiddenButtons == numberOfBombs){
+        if (numberOfHiddenButtons == numberOfBombs) {
             blockButtons();
             displayAllBombs();
             displayWiningScreen();
@@ -425,10 +424,12 @@ public class GameView {
         stage.setScene(scene);
         stage.showAndWait();
     }
-    private void blockButtons(){
+
+    private void blockButtons() {
         for (GameButton[] gameMapButton : gameMapButtons) {
             for (GameButton button : gameMapButton) {
-                button.setOnAction(event -> {});
+                button.setOnAction(event -> {
+                });
             }
         }
     }
@@ -448,8 +449,8 @@ public class GameView {
         displayEmptyMap();
 
         int[] position = new int[2];
-        for (int i = 0; i < 8; i++) {
-            for (int j = 0; j < 8; j++) {
+        for (int i = 0; i < gameMapButtons.length; i++) {
+            for (int j = 0; j < gameMapButtons[i].length; j++) {
                 GameButton button = buttons2[i][j];
                 button.setOnAction(event -> {
                     position[0] = button.getX();

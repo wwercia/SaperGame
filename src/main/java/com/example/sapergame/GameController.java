@@ -10,7 +10,7 @@ public class GameController {
         GameView gameView = new GameView(new GameController());
         GameMap gameMap = new GameMap();
         int[] position = gameView.displayEmptyMapToGetXAndYClickedByUser();
-        System.out.println("posiotions clicked by user:");
+        System.out.println("positions clicked by user:");
         System.out.println("x " + position[0]);
         System.out.println("y " + position[1]);
         Field[][] mapFields = gameMap.createNewMap(position[0],position[1]);

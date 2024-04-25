@@ -4,17 +4,8 @@ public class Bomb {
     public int getX() {
         return x;
     }
-
-    public void setX(int x) {
-        this.x = x;
-    }
-
     public int getY() {
         return y;
-    }
-
-    public void setY(int y) {
-        this.y = y;
     }
 
     public Bomb(int x, int y){
@@ -22,6 +13,6 @@ public class Bomb {
         this.y = y;
     }
 
-    private int x;
-    private int y;
+    private final int x;
+    private final int y;
 }
