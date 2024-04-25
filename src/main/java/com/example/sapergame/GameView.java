@@ -48,23 +48,7 @@ public class GameView {
 
     private void initGameMapToGetFieldClickedByUser(){
         displayEmptyButtons();
-        Integer[] position = new Integer[2];
-        for (int i = 0; i < gameMapButtons.length; i++) {
-            for (int j = 0; j < gameMapButtons[i].length; j++) {
-                GameButton button = gameMapButtons[i][j];
-                int finalI = i;
-                int finalJ = j;
-                button.setOnAction(event -> {
-                    position[0] = button.getX();
-                    position[1] = button.getY();
-                    Field fieldClicked = new Field(0, false, finalI, finalJ);
-                    Field[][] fields = gameController.initGameMap(fieldClicked);
-                    fieldClickedByPlayer = fieldClicked;
-                    this.gameMapFields = fields;
-                    initGameMap(fieldClickedByPlayer);
-                });
-            }
-        }
+        getPositionOfClickedButton();
     }
     private void displayEmptyButtons(){
         gameMapButtons = new GameButton[8][8];
@@ -87,10 +71,29 @@ public class GameView {
         }
         mainBox.getChildren().add(boxForVBoxes);
     }
+    private void getPositionOfClickedButton(){
+        Integer[] position = new Integer[2];
+        for (int i = 0; i < gameMapButtons.length; i++) {
+            for (int j = 0; j < gameMapButtons[i].length; j++) {
+                GameButton button = gameMapButtons[i][j];
+                int finalI = i;
+                int finalJ = j;
+                button.setOnAction(event -> {
+                    position[0] = button.getX();
+                    position[1] = button.getY();
+                    Field fieldClicked = new Field(0, false, finalI, finalJ);
+                    Field[][] fields = gameController.initGameMap(fieldClicked);
+                    fieldClickedByPlayer = fieldClicked;
+                    this.gameMapFields = fields;
+                    initGameMap(fieldClickedByPlayer);
+                });
+            }
+        }
+    }
 
     private void initGameMap(Field fieldClickedByUser) {
         initGameMapButtons();
-        changeButtonActions(fieldClickedByUser);
+        setButtonStartStyles(fieldClickedByUser);
         setActionsOnButtons();
     }
 
@@ -98,23 +101,23 @@ public class GameView {
         for (int i = 0; i < gameMapFields.length; i++) {
             for (int j = 0; j < gameMapFields[i].length; j++) {
                 Field field = gameMapFields[i][j];
-                GameButton button1 = gameMapButtons[i][j];
-                button1.setText(String.valueOf(field.getBombsAroundThisField()));
-                button1.setNumberOfBombsAround(field.getBombsAroundThisField());
-                button1.setX(field.getX());
-                button1.setY(field.getY());
-                button1.setBomb(field.isBomb());
-                if (button1.isBomb()) {
-                    button1.setText("  ");
+                GameButton button = gameMapButtons[i][j];
+                button.setText(String.valueOf(field.getBombsAroundThisField()));
+                button.setNumberOfBombsAround(field.getBombsAroundThisField());
+                button.setX(field.getX());
+                button.setY(field.getY());
+                button.setBomb(field.isBomb());
+                if (button.isBomb()) {
+                    button.setText("  ");
                 }
-                gameMapButtons[i][j] = button1;
+                //gameMapButtons[i][j] = button;
             }
         }
     }
 
-    private void changeButtonActions(Field fieldClickedByUser) {
-        for (int i = 0; i < gameMapFields.length; i++) {
-            for (int j = 0; j < gameMapFields[i].length; j++) {
+    private void setButtonStartStyles(Field fieldClickedByUser) {
+        for (int i = 0; i < gameMapButtons.length; i++) {
+            for (int j = 0; j < gameMapButtons[i].length; j++) {
                 GameButton gameButton = gameMapButtons[i][j];
                 gameButton.getStyleClass().add("hidden-field-game-button");
             }
@@ -347,6 +350,8 @@ public class GameView {
     }
 
     private void addStyle(GameButton button) {
+        button.getStyleClass().remove("hidden-field-game-button");
+        button.getStyleClass().remove("hidden-field-game-button");
         button.getStyleClass().remove("hidden-field-game-button");
         int bombsAround = button.getNumberOfBombsAround();
         if (button.isBomb()) {
