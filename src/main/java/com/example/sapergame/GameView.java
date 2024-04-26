@@ -21,7 +21,7 @@ public class GameView {
         this.gameController = gameController;
     }
 
-    private HBox mainBox;
+    private VBox mainBox;
     private Field[][] gameMapFields = new Field[8][8];
     private GameButton[][] gameMapButtons = new GameButton[8][8];
     private Field fieldClickedByPlayer;
@@ -33,13 +33,23 @@ public class GameView {
         gameStage.initModality(Modality.APPLICATION_MODAL);
         gameStage.setTitle("Saper");
 
-        mainBox = new HBox();
+        mainBox = new VBox(15);
         mainBox.getStyleClass().add("main-box");
         mainBox.setAlignment(Pos.CENTER);
 
+        Button newGameButton = new Button("New game");
+        newGameButton.getStyleClass().add("play-button");
+        newGameButton.setOnAction(event -> {
+            gameStage.close();
+            gameStage.close();
+            gameController.startGame();
+        });
+        mainBox.getChildren().add(newGameButton);
+
+
         initGameMapToGetFieldClickedByUser();
 
-        Scene scene = new Scene(mainBox, 675, 610);
+        Scene scene = new Scene(mainBox, 675, 670);
         scene.getStylesheets().add(getClass().getResource("styles.css").toExternalForm());
         gameStage.setScene(scene);
         gameStage.show();
@@ -343,6 +353,8 @@ public class GameView {
                         exposeTopFieldsFromBelowFields();
                     }
                     addStyle(button);
+                    button.setOnAction(event1 -> {
+                    });
                     checkIfPlayerWon();
                 });
             }
