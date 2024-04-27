@@ -13,6 +13,29 @@
     -fx-padding: 10px 20px;
     -fx-background-radius: 5px;
 }
+
+.clicked-mark-bomb-button {
+    -fx-background-color: #0098ff;
+    -fx-text-fill: black;
+    -fx-font-size: 14px;
+    -fx-padding: 10px 20px;
+    -fx-background-radius: 5px;
+}
+.not-clicked-mark-bomb-button {
+    -fx-background-color: #92D2FE;
+    -fx-text-fill: black;
+    -fx-font-size: 14px;
+    -fx-padding: 10px 20px;
+    -fx-background-radius: 5px;
+}
+
+.marked-with-bomb-game-button {
+    -fx-background-image: url('circle.png'); /* Path to your circular icon */
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center; /* Center the background image */
+    -fx-background-size: 40px 40px; /* Set the dimensions of the background image */
+}
+
 .hidden-field-game-button{
     -fx-background-color: #0a0b0c;
     -fx-text-fill: transparent;

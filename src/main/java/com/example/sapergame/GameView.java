@@ -25,6 +25,7 @@ public class GameView {
     private Field[][] gameMapFields = new Field[8][8];
     private GameButton[][] gameMapButtons = new GameButton[8][8];
     private Field fieldClickedByPlayer;
+    private boolean markBombsButtonClicked = false;
 
     Stage gameStage;
 
@@ -37,6 +38,9 @@ public class GameView {
         mainBox.getStyleClass().add("main-box");
         mainBox.setAlignment(Pos.CENTER);
 
+        HBox boxForButtons = new HBox(10);
+        boxForButtons.setAlignment(Pos.CENTER);
+
         Button newGameButton = new Button("New game");
         newGameButton.getStyleClass().add("play-button");
         newGameButton.setOnAction(event -> {
@@ -44,7 +48,30 @@ public class GameView {
             gameStage.close();
             gameController.startGame();
         });
-        mainBox.getChildren().add(newGameButton);
+
+        Button markWithBombButton = new Button("Mark with bomb");
+        markWithBombButton.getStyleClass().add("not-clicked-mark-bomb-button");
+        markWithBombButton.setOnAction(event -> {
+            boolean isReady = isMapReady();
+            System.out.println(isReady);
+            if (isReady) {
+                changeColorOfMarkWithBombButton(markWithBombButton);
+                markBombsButtonClicked = !markBombsButtonClicked;
+                if (markBombsButtonClicked) {
+                    markBombsButtonClicked();
+                } else {
+                    setActionsOnButtons();
+                }
+            }
+        });
+
+        boxForButtons.getChildren().addAll(newGameButton, markWithBombButton);
+        mainBox.getChildren().add(boxForButtons);
+
+        //Button button = new Button("1");
+        //button.getStyleClass().add("hidden-field-game-button");
+        //mainBox.getChildren().add(button);
+        //button.getStyleClass().add("test");
 
 
         initGameMapToGetFieldClickedByUser();
@@ -56,11 +83,25 @@ public class GameView {
 
     }
 
-    private void initGameMapToGetFieldClickedByUser(){
+    private boolean isMapReady() {
+        boolean isReady = false;
+        for (GameButton[] gameMapButton : gameMapButtons) {
+            for (GameButton gameButton : gameMapButton) {
+                if (!gameButton.getStyleClass().contains("hidden-field-game-button")) {
+                    isReady = true;
+                    break;
+                }
+            }
+        }
+        return isReady;
+    }
+
+    private void initGameMapToGetFieldClickedByUser() {
         displayEmptyButtons();
         getPositionOfClickedButton();
     }
-    private void displayEmptyButtons(){
+
+    private void displayEmptyButtons() {
         gameMapButtons = new GameButton[8][8];
         HBox boxForVBoxes = new HBox(10);
         VBox boxForButtons = new VBox(10);
@@ -81,7 +122,8 @@ public class GameView {
         }
         mainBox.getChildren().add(boxForVBoxes);
     }
-    private void getPositionOfClickedButton(){
+
+    private void getPositionOfClickedButton() {
         Integer[] position = new Integer[2];
         for (int i = 0; i < gameMapButtons.length; i++) {
             for (int j = 0; j < gameMapButtons[i].length; j++) {
@@ -365,6 +407,8 @@ public class GameView {
         button.getStyleClass().remove("hidden-field-game-button");
         button.getStyleClass().remove("hidden-field-game-button");
         button.getStyleClass().remove("hidden-field-game-button");
+        button.getStyleClass().remove("marked-with-bomb-game-button");
+        button.getStyleClass().remove("marked-with-bomb-game-button");
         int bombsAround = button.getNumberOfBombsAround();
         if (button.isBomb()) {
             button.getStyleClass().add("bomb-button");
@@ -386,6 +430,35 @@ public class GameView {
             button.getStyleClass().add("seven-bombs-exposed-field-game-button");
         } else if (bombsAround == 8) {
             button.getStyleClass().add("eight-bombs-exposed-field-game-button");
+        }
+    }
+
+    private void changeColorOfMarkWithBombButton(Button button) {
+        if (button.getStyleClass().contains("clicked-mark-bomb-button")) {
+            button.getStyleClass().remove("clicked-mark-bomb-button");
+            button.getStyleClass().add("not-clicked-mark-bomb-button");
+        } else {
+            button.getStyleClass().remove("not-clicked-mark-bomb-button");
+            button.getStyleClass().add("clicked-mark-bomb-button");
+        }
+    }
+
+    private void markBombsButtonClicked() {
+        for (GameButton[] gameMapButton : gameMapButtons) {
+            for (GameButton button : gameMapButton) {
+                button.setOnAction(event -> markWithBomb(button));
+            }
+        }
+    }
+
+    private void markWithBomb(Button button) {
+        if (button.getStyleClass().contains("hidden-field-game-button")) {
+
+            if (button.getStyleClass().contains("marked-with-bomb-game-button")) {
+                button.getStyleClass().remove("marked-with-bomb-game-button");
+            } else {
+                button.getStyleClass().add("marked-with-bomb-game-button");
+            }
         }
     }
 
